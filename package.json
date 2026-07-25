@@ -1,0 +1,30 @@
+{
+  "name": "tiki-solitaire-v2",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Tiki Solitaire — a pair-and-chain patience game. Rebuilt UI.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "shots": "node scripts/shoot.mjs",
+    "check:play": "node scripts/play.mjs",
+    "check:layout": "node scripts/probe.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^24.0.0",
+    "playwright": "1.62.0",
+    "vite": "^5.4.8",
+    "vitest": "^1.6.0"
+  }
+}
