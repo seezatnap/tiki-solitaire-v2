@@ -178,6 +178,8 @@ export function Modal({ open, onClose, labelledBy, children, className }) {
         if (event.target === event.currentTarget) onClose?.();
       }}
     >
+      {/* The shell holds the frame and never scrolls, so its hairline border
+          stays on the edges; the content scrolls inside it. */}
       <div
         className={cx('sheet', className)}
         role="dialog"
@@ -186,7 +188,12 @@ export function Modal({ open, onClose, labelledBy, children, className }) {
         tabIndex={-1}
         ref={ref}
       >
-        {children}
+        {onClose && (
+          <button type="button" className="sheet__close" onClick={onClose} aria-label="Close">
+            ×
+          </button>
+        )}
+        <div className="sheet__scroll">{children}</div>
       </div>
     </div>
   );
@@ -199,9 +206,6 @@ const Suit = ({ s }) => (
 export function HelpModal({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} labelledBy="help-title" className="sheet--help">
-      <button type="button" className="sheet__close" onClick={onClose} aria-label="Close">
-        ×
-      </button>
       <h2 id="help-title">How to play</h2>
       <p className="sheet__lede">
         Everything in Tiki Solitaire is built out of <strong>fourteen</strong>. Pair to fourteen, forge

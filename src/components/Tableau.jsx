@@ -1,9 +1,12 @@
 import { useMemo } from 'react';
 import { Card, cx } from './Card.jsx';
-import { useElementSize } from '../lib/hooks.js';
+import { useElementSize, useMediaQuery } from '../lib/hooks.js';
 import { COLUMN_COUNT } from '../game/rules.js';
 
 const clamp = (min, value, max) => Math.max(min, Math.min(max, value));
+
+// Keep in step with the flow-layout breakpoint in game.css.
+const FLOWING = '(max-width: 700px)';
 
 /**
  * The eight columns. Card size is derived from the measured width so all eight
@@ -12,22 +15,26 @@ const clamp = (min, value, max) => Math.max(min, Math.min(max, value));
  */
 export function Tableau({ tableau, selectedColumn, toneFor, onColumnActivate, onCardPointerDown, denied }) {
   const [paneRef, size] = useElementSize();
+  // Where the page flows, the table takes the height it needs and pushes the
+  // rest down; elsewhere it lives inside a fixed frame and has to fit.
+  const flowing = useMediaQuery(FLOWING);
 
   const metrics = useMemo(() => {
     const width = size.width || 900;
     const height = size.height || 460;
     const gap = clamp(5, width * 0.014, 14);
     const byWidth = (width - gap * (COLUMN_COUNT - 1)) / COLUMN_COUNT;
-    // On a short pane, smaller cards mean more of each column stays legible.
-    const byHeight = Math.max(44, (height * 0.44) / 1.42);
+    // In a fixed frame, a short pane means smaller cards so more of each
+    // column stays legible. In flow, the cards simply take the width.
+    const byHeight = flowing ? Infinity : Math.max(44, (height * 0.44) / 1.42);
     const cardW = Math.max(26, Math.min(byWidth, byHeight, 104));
     const cardH = cardW * 1.42;
     const tallest = tableau.reduce((max, column) => Math.max(max, column.length), 0);
     const roomy = cardH * 0.34;
     const tight = cardH * 0.15;
-    const fitting = tallest > 1 ? (height - cardH - 8) / (tallest - 1) : roomy;
+    const fitting = flowing || tallest < 2 ? roomy : (height - cardH - 8) / (tallest - 1);
     return { gap, cardW, cardH, stack: clamp(tight, fitting, roomy) };
-  }, [size.width, size.height, tableau]);
+  }, [size.width, size.height, tableau, flowing]);
 
   return (
     <section className="tableau" aria-label="Tableau">

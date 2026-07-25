@@ -46,11 +46,21 @@ for (const viewport of VIEWPORTS) {
   await page.screenshot({ path: `${OUT}/${viewport.name}.png` });
 
   const overflow = await page.evaluate(() => ({
-    docScroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    bodyH: document.documentElement.scrollHeight - document.documentElement.clientHeight
+    sideways: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    down: document.documentElement.scrollHeight - document.documentElement.clientHeight,
+    tableauScrolls: (() => {
+      const pane = document.querySelector('.tableau__pane');
+      return pane.scrollHeight > pane.clientHeight + 1;
+    })()
   }));
-  if (overflow.docScroll > 1 || overflow.bodyH > 1) {
-    problems.push(`[${viewport.name}] page overflows: ${JSON.stringify(overflow)}`);
+  // Sideways is never right. Downward is how phones are meant to work — the
+  // table takes the height it needs and pushes the rest of the page along.
+  if (overflow.sideways > 1) problems.push(`[${viewport.name}] page overflows sideways`);
+  if (viewport.width > 700 && overflow.down > 1) {
+    problems.push(`[${viewport.name}] fixed layout scrolls down: ${overflow.down}px`);
+  }
+  if (viewport.width <= 700 && overflow.tableauScrolls) {
+    problems.push(`[${viewport.name}] the table scrolls inside itself instead of pushing the page`);
   }
 
   if (viewport.name === 'desktop-1440' || viewport.name === 'phone-430') {

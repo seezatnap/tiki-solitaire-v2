@@ -199,6 +199,10 @@
 .tableau__pane {
   flex: 1;
   min-height: 0;
+  /* The grid's columns are a fixed width, so without this the pane refuses to
+     shrink below them — and the card size is measured from the pane, which
+     would leave the two egging each other on. */
+  min-width: 0;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 2px;
@@ -1268,6 +1272,56 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 4px;
+  }
+}
+
+/* Phone: the page flows. The table takes the height its columns need and
+   pushes everything below it down, rather than scrolling inside a frame. */
+@media (max-width: 700px) {
+  html,
+  body,
+  #root {
+    height: auto;
+    min-height: 100%;
+  }
+
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .app {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .stage,
+  .tableau,
+  .rail,
+  .reef {
+    flex: none;
+  }
+
+  .tableau {
+    min-height: 0;
+  }
+
+  .tableau__pane {
+    overflow: visible;
+  }
+
+  .reef,
+  .reef--quiet {
+    max-height: none;
+  }
+
+  .panel__body {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .tray {
+    overflow-x: auto;
   }
 }
 
