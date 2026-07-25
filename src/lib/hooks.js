@@ -29,9 +29,11 @@ export const useElementSize = () => {
     if (typeof ResizeObserver === 'undefined') return;
     observer.current = new ResizeObserver(read);
     observer.current.observe(node);
+    // No effect cleanup here on purpose: React calls this ref with null when
+    // the element goes, which disconnects above. Disconnecting from an effect
+    // instead would kill the observer during StrictMode's remount rehearsal
+    // and leave every measurement frozen at its first reading.
   }, []);
-
-  useEffect(() => () => observer.current?.disconnect(), []);
 
   return [ref, size];
 };

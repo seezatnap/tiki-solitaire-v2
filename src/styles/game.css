@@ -775,9 +775,11 @@
 
 .chain {
   position: relative;
-  /* Sized by its own rows — never squeezed by what sits beside it, or the
-     packing would be measured against a width the rows then change. */
-  flex: 0 0 auto;
+  /* A chain card always spans the panel. Its width is then a fact of the
+     layout rather than of its contents, which is what lets the rows be packed
+     to a width they can never exceed. */
+  flex: 1 1 100%;
+  min-width: 0;
   max-width: 100%;
   padding: 9px 12px 12px;
   border-radius: 15px;
@@ -906,7 +908,7 @@
 /* out of the last domino on a row, right and down into the run */
 .chain__return-out {
   position: relative;
-  flex: 1 0 14px;
+  flex: 1 0 20px;
   align-self: stretch;
   margin-left: -5px;
 }
@@ -920,13 +922,15 @@
   height: calc(50% + var(--chain-gap) / 2);
   border-top: var(--chain-line) solid var(--chain-ink);
   border-right: var(--chain-line) solid var(--chain-ink);
+  border-bottom: var(--chain-line) solid var(--chain-ink);
   border-top-right-radius: 9px;
+  border-bottom-right-radius: 9px;
 }
 
 /* down the far side and right into the first domino of the next row */
 .chain__return-in {
   position: relative;
-  flex: 0 0 14px;
+  flex: 0 0 20px;
   align-self: stretch;
   margin-right: -5px;
 }
@@ -938,8 +942,10 @@
   right: 5px;
   bottom: 50%;
   top: calc(var(--chain-gap) / -2);
+  border-top: var(--chain-line) solid var(--chain-ink);
   border-bottom: var(--chain-line) solid var(--chain-ink);
   border-left: var(--chain-line) solid var(--chain-ink);
+  border-top-left-radius: 9px;
   border-bottom-left-radius: 9px;
 }
 

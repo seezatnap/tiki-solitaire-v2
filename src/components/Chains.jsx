@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { cx } from './Card.jsx';
 import { DominoTile, pretty } from './Workyard.jsx';
 import { useElementSize } from '../lib/hooks.js';
@@ -84,7 +84,6 @@ const packRows = (units, available, sizes) => {
 function Chain({
   chain,
   index,
-  room,
   selected,
   joinable,
   denied,
@@ -93,7 +92,18 @@ function Chain({
   onActivate,
   onPointerDown
 }) {
-  const fitRef = useRef(null);
+  // A chain card always spans the panel, so this width is fixed by the layout
+  // rather than by the chain's own contents — packing against it can't chase
+  // its own tail, and the rows can never be wider than the card holding them.
+  const [observeFit, fitSize] = useElementSize();
+  const node = useRef(null);
+  const fitRef = useCallback(
+    (element) => {
+      node.current = element;
+      observeFit(element);
+    },
+    [observeFit]
+  );
   const [rowSizes, setRowSizes] = useState(null);
   const signature = useRef('');
 
@@ -101,18 +111,10 @@ function Chain({
   const circular = checkCircular(chain);
   const units = buildUnits(chain, ends);
 
-  // Packing is measured against the room the whole list has, not against this
-  // chain's own width — a chain is as wide as its rows, so measuring itself
-  // would chase its own tail.
   useLayoutEffect(() => {
-    const fit = fitRef.current;
-    if (!fit || !room) return;
-    const card = fit.closest('.chain');
-    const style = card ? getComputedStyle(card) : null;
-    const inset = style
-      ? Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight)
-      : 24;
-    const next = packRows(units, room - inset, measure(fit));
+    const fit = node.current;
+    if (!fit || !fitSize.width) return;
+    const next = packRows(units, fitSize.width, measure(fit));
     const stamp = next.join(',');
     if (stamp !== signature.current) {
       signature.current = stamp;
@@ -230,8 +232,6 @@ export function ChainList({
   onPointerDown,
   newChainReady
 }) {
-  const [chainsRef, chainsSize] = useElementSize();
-
   if (!chains.length) {
     return (
       <div className={cx('chain-empty', newChainReady && 'is-ready')} data-drop-kind="new-chain" data-drop-index={-1}>
@@ -245,13 +245,12 @@ export function ChainList({
   }
 
   return (
-    <div className="chains" ref={chainsRef}>
+    <div className="chains">
       {chains.map((chain, index) => (
         <Chain
           key={`chain-${index}`}
           chain={chain}
           index={index}
-          room={chainsSize.width}
           selected={selected === index}
           joinable={joinable.has(index)}
           denied={denied === `chain:${index}`}

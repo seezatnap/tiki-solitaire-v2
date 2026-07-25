@@ -332,6 +332,39 @@ check('nothing hidden off the side', grown.scrollable, false);
 check('chips stayed readable', grown.chip >= 16, true);
 await grow.screenshot({ path: `${OUT}/interaction-wrapped.png` });
 
+// Measurements have to keep up with the window, not just the first paint —
+// both the board and the chains are sized from what they measure.
+console.log('the board keeps up when the window changes size');
+const cardWidth = () =>
+  grow.evaluate(() =>
+    Number.parseFloat(
+      getComputedStyle(document.querySelector('.tableau__grid')).getPropertyValue('--card-w')
+    )
+  );
+const wideCard = await cardWidth();
+await grow.setViewportSize({ width: 400, height: 900 });
+await grow.waitForTimeout(500);
+const narrowCard = await cardWidth();
+check('cards shrink with the window', narrowCard < wideCard - 1, true);
+
+const resized = await grow.evaluate(() => {
+  const rows = [...document.querySelectorAll('.chain__row')];
+  const fit = document.querySelector('.chain__fit');
+  return {
+    rows: rows.length,
+    overflowing: rows.filter((row) => row.scrollWidth > row.clientWidth + 1).length,
+    scrollable: fit.scrollWidth > fit.clientWidth + 1
+  };
+});
+check('chain repacks onto more rows', resized.rows > grown.rows, true);
+check('still no row overflow', resized.overflowing, 0);
+check('still nothing off the side', resized.scrollable, false);
+
+await grow.setViewportSize({ width: 620, height: 900 });
+await grow.waitForTimeout(500);
+check('and back again', (await grow.locator('.chain__row').count()) === grown.rows, true);
+check('cards grow back', (await cardWidth()) > narrowCard + 1, true);
+
 await browser.close();
 
 if (errors.length) {
