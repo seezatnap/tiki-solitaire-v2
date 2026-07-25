@@ -2,6 +2,11 @@ import { RANK_VALUES } from '../game/rules.js';
 
 export const cx = (...parts) => parts.filter(Boolean).join(' ');
 
+const ART_SUIT = { '♠': 'S', '♥': 'H', '♦': 'D', '♣': 'C' };
+
+/** The painted face for a card. Falls back to the drawn one if it 404s. */
+export const cardArt = (card) => `${import.meta.env.BASE_URL}art/cards/${card.rank}${ART_SUIT[card.suit]}.webp`;
+
 const COURT = new Set(['J', 'Q', 'K']);
 
 /** A carved mask, used where a court card would normally wear a portrait. */
@@ -62,6 +67,18 @@ export function Card({ card, tone = 'idle', ghost = false, style, className, ...
         <span className="card__rank">{card.rank}</span>
         <span className="card__pip">{card.suit}</span>
       </span>
+      {/* Painted over the drawn face, which stays underneath as the fallback. */}
+      <img
+        className="card__art"
+        src={cardArt(card)}
+        alt=""
+        draggable="false"
+        decoding="async"
+        onLoad={(event) => event.currentTarget.classList.add('is-ready')}
+        onError={(event) => {
+          event.currentTarget.hidden = true;
+        }}
+      />
     </div>
   );
 }

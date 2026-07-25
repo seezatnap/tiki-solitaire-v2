@@ -3,3 +3,6 @@ dist/
 shots/
 .DS_Store
 *.local
+.env
+# Generated art: the PNG sources are large, the WebP the app uses is committed
+public/art/**/*.png

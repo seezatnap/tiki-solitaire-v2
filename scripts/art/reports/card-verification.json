@@ -1,0 +1,736 @@
+[
+  {
+    "card": "10C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "10",
+      "suit": "clubs",
+      "centre_symbols": 10,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the ten of clubs with ten club symbols in the center."
+    }
+  },
+  {
+    "card": "10D",
+    "ok": false,
+    "problems": [
+      "pips=9"
+    ],
+    "seen": {
+      "rank": "10",
+      "suit": "diamonds",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the 10 of diamonds with nine diamond pips in the central panel."
+    }
+  },
+  {
+    "card": "10H",
+    "ok": false,
+    "problems": [
+      "pips=9"
+    ],
+    "seen": {
+      "rank": "10",
+      "suit": "hearts",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the 10 of hearts with nine heart symbols in the center panel."
+    }
+  },
+  {
+    "card": "10S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "10",
+      "suit": "spades",
+      "centre_symbols": 10,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the ten of spades."
+    }
+  },
+  {
+    "card": "2C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "2",
+      "suit": "clubs",
+      "centre_symbols": 2,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible 2 of clubs with two club symbols in the center panel."
+    }
+  },
+  {
+    "card": "2D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "2",
+      "suit": "diamonds",
+      "centre_symbols": 2,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Two diamond suit symbols appear in the central panel."
+    }
+  },
+  {
+    "card": "2H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "2",
+      "suit": "hearts",
+      "centre_symbols": 2,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible 2 of hearts with two heart symbols in the center."
+    }
+  },
+  {
+    "card": "2S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "2",
+      "suit": "spades",
+      "centre_symbols": 2,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A two of spades with two spade symbols in the center."
+    }
+  },
+  {
+    "card": "3C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "3",
+      "suit": "clubs",
+      "centre_symbols": 3,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible 3 of clubs with three club symbols in the center."
+    }
+  },
+  {
+    "card": "3D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "3",
+      "suit": "diamonds",
+      "centre_symbols": 3,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible 3 of diamonds with three diamond pips in the center."
+    }
+  },
+  {
+    "card": "3H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "3",
+      "suit": "hearts",
+      "centre_symbols": 3,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A clear 3 of hearts with three heart symbols in the central panel."
+    }
+  },
+  {
+    "card": "3S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "3",
+      "suit": "spades",
+      "centre_symbols": 3,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A 3 of spades with three central spade symbols."
+    }
+  },
+  {
+    "card": "4C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "4",
+      "suit": "clubs",
+      "centre_symbols": 4,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A four of clubs with four club symbols in the central panel."
+    }
+  },
+  {
+    "card": "4D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "4",
+      "suit": "diamonds",
+      "centre_symbols": 4,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A clear four of diamonds with four diamond pips in the central panel."
+    }
+  },
+  {
+    "card": "4H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "4",
+      "suit": "hearts",
+      "centre_symbols": 4,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible four of hearts with four heart pips in the central panel."
+    }
+  },
+  {
+    "card": "4S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "4",
+      "suit": "spades",
+      "centre_symbols": 4,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A clear four of spades with four spade symbols in the central panel."
+    }
+  },
+  {
+    "card": "5C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "5",
+      "suit": "clubs",
+      "centre_symbols": 5,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the five of clubs."
+    }
+  },
+  {
+    "card": "5D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "5",
+      "suit": "diamonds",
+      "centre_symbols": 5,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Five diamond pips are visible in the centre panel."
+    }
+  },
+  {
+    "card": "5H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "5",
+      "suit": "hearts",
+      "centre_symbols": 5,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible 5 of hearts with five heart pips in the central panel."
+    }
+  },
+  {
+    "card": "5S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "5",
+      "suit": "spades",
+      "centre_symbols": 5,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A five of spades with five spade symbols in the center."
+    }
+  },
+  {
+    "card": "6C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "6",
+      "suit": "clubs",
+      "centre_symbols": 6,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A six of clubs with six club symbols in the central panel."
+    }
+  },
+  {
+    "card": "6D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "6",
+      "suit": "diamonds",
+      "centre_symbols": 6,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A legible 6 of diamonds with six diamond pips in the center."
+    }
+  },
+  {
+    "card": "6H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "6",
+      "suit": "hearts",
+      "centre_symbols": 6,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A six of hearts with six heart symbols in the central panel."
+    }
+  },
+  {
+    "card": "6S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "6",
+      "suit": "spades",
+      "centre_symbols": 6,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A six of spades with six spade symbols in the center."
+    }
+  },
+  {
+    "card": "7C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "7",
+      "suit": "clubs",
+      "centre_symbols": 7,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Seven of clubs with seven club symbols in the center."
+    }
+  },
+  {
+    "card": "7D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "7",
+      "suit": "diamonds",
+      "centre_symbols": 7,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Seven diamond suit symbols are shown in the central panel."
+    }
+  },
+  {
+    "card": "7H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "7",
+      "suit": "hearts",
+      "centre_symbols": 7,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A seven of hearts with seven heart pips in the center."
+    }
+  },
+  {
+    "card": "7S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "7",
+      "suit": "spades",
+      "centre_symbols": 7,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A seven of spades with seven spade symbols in the centre."
+    }
+  },
+  {
+    "card": "8C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "8",
+      "suit": "clubs",
+      "centre_symbols": 8,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the 8 of clubs with eight club symbols in the central panel."
+    }
+  },
+  {
+    "card": "8D",
+    "ok": false,
+    "problems": [
+      "pips=9"
+    ],
+    "seen": {
+      "rank": "8",
+      "suit": "diamonds",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Eight of diamonds with nine diamond pips in the centre."
+    }
+  },
+  {
+    "card": "8H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "8",
+      "suit": "hearts",
+      "centre_symbols": 8,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "An eight of hearts with eight heart pips in the central panel."
+    }
+  },
+  {
+    "card": "8S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "8",
+      "suit": "spades",
+      "centre_symbols": 8,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "An 8 of spades with eight spade symbols in the central panel."
+    }
+  },
+  {
+    "card": "9C",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "9",
+      "suit": "clubs",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A nine of clubs with nine club symbols in the center."
+    }
+  },
+  {
+    "card": "9D",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "9",
+      "suit": "diamonds",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Nine diamond suit symbols are visible in the central panel."
+    }
+  },
+  {
+    "card": "9H",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "9",
+      "suit": "hearts",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is a 9 of hearts with nine heart symbols in the center."
+    }
+  },
+  {
+    "card": "9S",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "9",
+      "suit": "spades",
+      "centre_symbols": 9,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the 9 of spades with nine spade symbols in the centre."
+    }
+  },
+  {
+    "card": "AC",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "A",
+      "suit": "clubs",
+      "centre_symbols": 1,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the ace of clubs with a single club in the center."
+    }
+  },
+  {
+    "card": "AD",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "A",
+      "suit": "diamonds",
+      "centre_symbols": 0,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "An ace of diamonds with no suit symbols in the central panel."
+    }
+  },
+  {
+    "card": "AH",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "A",
+      "suit": "hearts",
+      "centre_symbols": 1,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "This is the ace of hearts with one heart in the center panel."
+    }
+  },
+  {
+    "card": "AS",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "A",
+      "suit": "spades",
+      "centre_symbols": 1,
+      "court_figure": false,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "The card is the Ace of spades with one spade in the central panel."
+    }
+  },
+  {
+    "card": "JC",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "J",
+      "suit": "clubs",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A jack of clubs with one club symbol in the central panel."
+    }
+  },
+  {
+    "card": "JD",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "J",
+      "suit": "diamonds",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A jack of diamonds with one central diamond symbol."
+    }
+  },
+  {
+    "card": "JH",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "J",
+      "suit": "hearts",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A jack of hearts with one heart symbol in the center panel."
+    }
+  },
+  {
+    "card": "JS",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "J",
+      "suit": "spades",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "This is a jack of spades with one central spade symbol."
+    }
+  },
+  {
+    "card": "KC",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "K",
+      "suit": "clubs",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A king of clubs with one club in the central panel."
+    }
+  },
+  {
+    "card": "KD",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "K",
+      "suit": "diamonds",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A king of diamonds with one central diamond symbol."
+    }
+  },
+  {
+    "card": "KH",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "K",
+      "suit": "hearts",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "A king of hearts with one heart in the center panel."
+    }
+  },
+  {
+    "card": "KS",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "K",
+      "suit": "spades",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "This is a king of spades with one central suit symbol."
+    }
+  },
+  {
+    "card": "QC",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "Q",
+      "suit": "clubs",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "This is a queen of clubs with one club symbol in the central panel."
+    }
+  },
+  {
+    "card": "QD",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "Q",
+      "suit": "diamonds",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Queen of diamonds with one diamond symbol in the central panel."
+    }
+  },
+  {
+    "card": "QH",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "Q",
+      "suit": "hearts",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "Queen of hearts with one heart in the center."
+    }
+  },
+  {
+    "card": "QS",
+    "ok": true,
+    "problems": [],
+    "seen": {
+      "rank": "Q",
+      "suit": "spades",
+      "centre_symbols": 1,
+      "court_figure": true,
+      "corner_index_legible": true,
+      "stray_text": "",
+      "notes": "This is a queen of spades with one spade symbol in the center."
+    }
+  }
+]

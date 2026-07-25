@@ -1,0 +1,506 @@
+[
+  {
+    "card": "10C",
+    "want": 10,
+    "got": 10,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-left",
+      "upper-middle",
+      "upper-right",
+      "middle-left",
+      "middle-right",
+      "lower-left",
+      "lower-right",
+      "bottom-centre"
+    ]
+  },
+  {
+    "card": "10D",
+    "want": 10,
+    "got": 10,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-centre",
+      "middle-left",
+      "middle-right",
+      "lower-left",
+      "lower-centre",
+      "lower-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "10H",
+    "want": 10,
+    "got": 10,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-left",
+      "upper-centre",
+      "upper-right",
+      "middle-left",
+      "middle-right",
+      "lower-left",
+      "lower-right",
+      "bottom-centre"
+    ]
+  },
+  {
+    "card": "10S",
+    "want": 10,
+    "got": 10,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-left",
+      "upper-right",
+      "centre",
+      "middle-left",
+      "middle-right",
+      "lower-left",
+      "lower-right",
+      "bottom-centre"
+    ]
+  },
+  {
+    "card": "2C",
+    "want": 2,
+    "got": 2,
+    "ok": true,
+    "symbols": [
+      "upper-middle",
+      "lower-middle"
+    ]
+  },
+  {
+    "card": "2D",
+    "want": 2,
+    "got": 2,
+    "ok": true,
+    "symbols": [
+      "upper-centre",
+      "lower-centre"
+    ]
+  },
+  {
+    "card": "2H",
+    "want": 2,
+    "got": 2,
+    "ok": true,
+    "symbols": [
+      "upper-centre",
+      "lower-centre"
+    ]
+  },
+  {
+    "card": "2S",
+    "want": 2,
+    "got": 2,
+    "ok": true,
+    "symbols": [
+      "upper-centre",
+      "lower-centre"
+    ]
+  },
+  {
+    "card": "3C",
+    "want": 3,
+    "got": 3,
+    "ok": true,
+    "symbols": [
+      "upper-middle",
+      "centre",
+      "lower-middle"
+    ]
+  },
+  {
+    "card": "3D",
+    "want": 3,
+    "got": 3,
+    "ok": true,
+    "symbols": [
+      "upper-centre",
+      "centre",
+      "lower-centre"
+    ]
+  },
+  {
+    "card": "3H",
+    "want": 3,
+    "got": 3,
+    "ok": true,
+    "symbols": [
+      "top-centre",
+      "middle-centre",
+      "bottom-centre"
+    ]
+  },
+  {
+    "card": "3S",
+    "want": 3,
+    "got": 3,
+    "ok": true,
+    "symbols": [
+      "top-centre",
+      "middle-centre",
+      "bottom-centre"
+    ]
+  },
+  {
+    "card": "4C",
+    "want": 4,
+    "got": 4,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "lower-left",
+      "lower-right"
+    ]
+  },
+  {
+    "card": "4D",
+    "want": 4,
+    "got": 4,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "lower-left",
+      "lower-right"
+    ]
+  },
+  {
+    "card": "4H",
+    "want": 4,
+    "got": 4,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "4S",
+    "want": 4,
+    "got": 4,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "lower-left",
+      "lower-right"
+    ]
+  },
+  {
+    "card": "5C",
+    "want": 5,
+    "got": 5,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "centre",
+      "lower-left",
+      "lower-right"
+    ]
+  },
+  {
+    "card": "5D",
+    "want": 5,
+    "got": 5,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "centre",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "5H",
+    "want": 5,
+    "got": 5,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "centre",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "5S",
+    "want": 5,
+    "got": 5,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "centre",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "6C",
+    "want": 6,
+    "got": 6,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "6D",
+    "want": 6,
+    "got": 6,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "6H",
+    "want": 6,
+    "got": 6,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "6S",
+    "want": 6,
+    "got": 6,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "middle-left",
+      "middle-right",
+      "lower-left",
+      "lower-right"
+    ]
+  },
+  {
+    "card": "7C",
+    "want": 7,
+    "got": 7,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "middle-left",
+      "centre",
+      "middle-right",
+      "lower-left",
+      "lower-right"
+    ]
+  },
+  {
+    "card": "7D",
+    "want": 7,
+    "got": 7,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "middle-left",
+      "centre",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "7H",
+    "want": 7,
+    "got": 7,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "middle-left",
+      "centre",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "7S",
+    "want": 7,
+    "got": 7,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "centre",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "8C",
+    "want": 8,
+    "got": 8,
+    "ok": true,
+    "symbols": [
+      "upper-left",
+      "upper-right",
+      "centre",
+      "lower-left",
+      "lower-right",
+      "lower-middle",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "8D",
+    "want": 8,
+    "got": 8,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "centre",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-centre",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "8H",
+    "want": 8,
+    "got": 8,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-centre",
+      "middle-left",
+      "middle-right",
+      "lower-centre",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "8S",
+    "want": 8,
+    "got": 8,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "centre",
+      "middle-left",
+      "middle-right",
+      "lower-centre",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "9C",
+    "want": 9,
+    "got": 9,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-left",
+      "upper-right",
+      "centre",
+      "lower-left",
+      "lower-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "9D",
+    "want": 9,
+    "got": 9,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-left",
+      "upper-right",
+      "centre",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "9H",
+    "want": 9,
+    "got": 9,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "upper-left",
+      "upper-right",
+      "centre",
+      "middle-left",
+      "middle-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  },
+  {
+    "card": "9S",
+    "want": 9,
+    "got": 9,
+    "ok": true,
+    "symbols": [
+      "top-left",
+      "top-right",
+      "middle-left",
+      "middle-right",
+      "centre",
+      "lower-left",
+      "lower-right",
+      "bottom-left",
+      "bottom-right"
+    ]
+  }
+]

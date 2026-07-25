@@ -114,6 +114,15 @@ Items marked ✅ are covered by an automated check; the check is named beside th
 - ✅ A played board asks before being swept away — `play.mjs`, `App.test.jsx`
 - ✅ `Esc` and a click outside close a sheet — `play.mjs`
 
+### Artwork
+- ✅ 52 painted card faces, one visual family, drawn from a single anchor card — `deck.mjs`
+- ✅ Every card shows the right rank and suit — `verify.mjs`
+- ✅ Every numbered card shows the right number of pips — `recount.mjs`
+- ✅ The corner index stays legible, because it is all a stacked card shows — `verify.mjs`
+- A missing image falls back to the drawn CSS face
+- Painted table under the tableau, washed down so the cards stay brightest
+- Installed-app icons, maskable icon and iOS startup screens, all from one source
+
 ### Manners
 - Honours `prefers-reduced-motion`
 - Dark by design, `theme-color` set, safe-area insets respected

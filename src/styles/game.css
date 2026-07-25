@@ -175,25 +175,19 @@
   min-height: 0;
   padding: clamp(8px, 1vw, 16px);
   border-radius: var(--radius);
-  background:
+  /* The painted table sits on top of the gradients, which remain as the
+     colour it fades in from. */
+  /* A wash over the painted table so its carved border recedes and the cards
+     stay the brightest thing on it. */
+  background-image:
+    linear-gradient(rgba(4, 16, 14, 0.55), rgba(4, 16, 14, 0.55)),
+    url('/art/table.webp'),
     radial-gradient(120% 120% at 50% -20%, rgba(87, 220, 203, 0.08), transparent 58%),
-    color-mix(in oklab, #06231f 46%, transparent);
+    linear-gradient(color-mix(in oklab, #06231f 46%, transparent), color-mix(in oklab, #06231f 46%, transparent));
+  background-size: auto, cover, auto, auto;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow: inset 0 0 0 1px var(--edge-soft), inset 0 60px 90px -70px rgba(0, 0, 0, 0.9);
-}
-
-/* A carved mark on the table itself, so the felt never reads as empty. */
-.tableau::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 6%;
-  width: min(30%, 240px);
-  aspect-ratio: 1;
-  translate: -50% 0;
-  opacity: 0.05;
-  pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23f3c977' stroke-width='1' stroke-linecap='round'%3E%3Cpath d='M20 2 24 10 33 11 26.6 17.4 28.3 26 20 22 11.7 26 13.4 17.4 7 11 16 10Z'/%3E%3Ccircle cx='20' cy='20' r='17.5'/%3E%3Ccircle cx='20' cy='20' r='13'/%3E%3C/svg%3E")
-    center / contain no-repeat;
 }
 
 .tableau__pane {
@@ -308,6 +302,26 @@
 .card--stacked {
   position: absolute;
   left: 0;
+}
+
+.card__art {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  /* Fades up over the drawn face, so a slow connection shows a real card
+     rather than an empty rectangle. */
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.card__art.is-ready {
+  opacity: 1;
 }
 
 .card--red {
