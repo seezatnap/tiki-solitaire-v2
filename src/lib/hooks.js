@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-/** Live size of an element, via ResizeObserver. */
+/**
+ * Live size of an element, via ResizeObserver.
+ *
+ * The ref is a callback so the element is measured whenever it arrives — an
+ * element that mounts later (a panel that was empty a moment ago) is picked up
+ * just the same as one present from the start.
+ */
 export const useElementSize = () => {
-  const ref = useRef(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
+  const observer = useRef(null);
 
-  useLayoutEffect(() => {
-    const node = ref.current;
-    if (!node) return undefined;
+  const ref = useCallback((node) => {
+    observer.current?.disconnect();
+    observer.current = null;
+    if (!node) return;
 
     const read = () => {
       const rect = node.getBoundingClientRect();
@@ -19,11 +26,12 @@ export const useElementSize = () => {
     };
 
     read();
-    if (typeof ResizeObserver === 'undefined') return undefined;
-    const observer = new ResizeObserver(read);
-    observer.observe(node);
-    return () => observer.disconnect();
+    if (typeof ResizeObserver === 'undefined') return;
+    observer.current = new ResizeObserver(read);
+    observer.current.observe(node);
   }, []);
+
+  useEffect(() => () => observer.current?.disconnect(), []);
 
   return [ref, size];
 };

@@ -272,6 +272,66 @@ check('pairs consumed', await board.locator('.slot--filled').count(), 0);
 check('domino forged', await board.locator('.tray__grip').count(), 1);
 await board.screenshot({ path: `${OUT}/interaction-chains.png` });
 
+/* ------------------------------------- a chain grown from an empty panel -- */
+
+// The chains panel starts out empty, so its container mounts only once the
+// first chain exists. This is the path where the packing used to be measured
+// against nothing and the chain ran off its card instead of wrapping.
+console.log('\nthird board: growing a long chain in a narrow window');
+const { default: perfect } = await import('./win-fixture.mjs');
+const trayOnly = {
+  tableau: Array.from({ length: 8 }, () => []),
+  pairs: [],
+  dominos: perfect.chains[0].slice(0, 6).map(({ displayValue1, displayValue2, ...domino }) => ({
+    ...domino,
+    inChain: false
+  })),
+  chains: [],
+  moveCount: 30
+};
+
+const narrow = await browser.newContext({ viewport: { width: 620, height: 900 } });
+const grow = await narrow.newPage();
+grow.on('pageerror', (e) => errors.push(e.message));
+grow.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+await grow.addInitScript((value) => {
+  window.localStorage.setItem('tiki-solitaire-v2', value);
+  window.localStorage.setItem('tiki-solitaire-v2:sound', 'false');
+}, JSON.stringify(trayOnly));
+await grow.goto(URL, { waitUntil: 'networkidle' });
+await grow.waitForTimeout(400);
+
+check('starts with no chain', await grow.locator('.chain').count(), 0);
+await grow.locator('.tray__grip').first().click();
+await grow.waitForTimeout(420);
+check('first domino opens a chain', await grow.locator('.chain').count(), 1);
+
+for (let i = 0; i < 5; i += 1) {
+  await grow.locator('.socket--end').click();
+  await grow.waitForTimeout(140);
+  await grow.locator('.tray__item.is-connectable .tray__grip').first().click();
+  await grow.waitForTimeout(420);
+}
+check('all six dominos chained', await grow.locator('.chain .domino').count(), 6);
+
+const grown = await grow.evaluate(() => {
+  const rows = [...document.querySelectorAll('.chain__row')];
+  const fit = document.querySelector('.chain__fit');
+  return {
+    rows: rows.length,
+    returns: document.querySelectorAll('.chain__return-span').length,
+    overflowing: rows.filter((row) => row.scrollWidth > row.clientWidth + 1).length,
+    scrollable: fit.scrollWidth > fit.clientWidth + 1,
+    chip: document.querySelector('.chain .chip').getBoundingClientRect().width
+  };
+});
+check('chain wrapped onto more than one row', grown.rows > 1, true);
+check('a return line per wrap', grown.returns, grown.rows - 1);
+check('no row overflows', grown.overflowing, 0);
+check('nothing hidden off the side', grown.scrollable, false);
+check('chips stayed readable', grown.chip >= 16, true);
+await grow.screenshot({ path: `${OUT}/interaction-wrapped.png` });
+
 await browser.close();
 
 if (errors.length) {

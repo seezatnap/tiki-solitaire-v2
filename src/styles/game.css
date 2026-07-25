@@ -870,7 +870,10 @@
   --chain-line: 1.5px;
   --chain-ink: color-mix(in oklab, var(--gold) 52%, transparent);
   position: relative;
-  overflow: hidden;
+  /* Rows are packed to fit, so this should never engage — but if a row ever
+     does outrun its width, the chain stays reachable rather than clipped. */
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .chain__row {
