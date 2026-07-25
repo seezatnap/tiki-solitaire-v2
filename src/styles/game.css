@@ -508,13 +508,17 @@
 
 .slots {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Columns adapt to the room available rather than being fixed per
+     breakpoint, so a slot is never narrower than the pair inside it. */
+  grid-template-columns: repeat(auto-fit, minmax(calc(var(--chip-w) * 2 + 18px), 1fr));
   gap: clamp(6px, 0.8vw, 10px);
 }
 
 .slot {
   position: relative;
   aspect-ratio: 1.16;
+  /* Chips plus their label, whatever the aspect ratio would rather do. */
+  min-height: calc(var(--chip-w) * 1.34 + 28px);
   display: grid;
   place-items: center;
   border-radius: 13px;
@@ -870,6 +874,7 @@
 .chain__fit {
   --chain-gap: 22px;
   --chain-line: 1.5px;
+  --chain-r: 9px;
   --chain-ink: color-mix(in oklab, var(--gold) 52%, transparent);
   position: relative;
   /* Rows are packed to fit, so this should never engage — but if a row ever
@@ -895,17 +900,51 @@
   height: var(--chain-gap);
 }
 
-/* the long run back across the full width, halfway down the gap */
-.chain__return-span::before {
-  content: '';
+/* The return path is drawn in five segments, each owned by exactly one box —
+   two of them overlapping would show as a doubled line where they meet.
+
+     … (domino) ──╮   out: horizontal, arc, vertical
+   ╭──────────────╯   span: arc, straight run, arc
+   ╰── (domino) …     in:   vertical, arc, horizontal                       */
+
+/* the straight run back, stopping short of both corners */
+.chain__return-span > i {
   position: absolute;
-  left: 1px;
-  right: 1px;
+  left: calc(1px + var(--chain-r));
+  right: calc(1px + var(--chain-r));
   top: 50%;
   border-top: var(--chain-line) solid var(--chain-ink);
 }
 
-/* out of the last domino on a row, right and down into the run */
+/* the corner that turns the run down at the far left */
+.chain__return-span::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  width: var(--chain-r);
+  height: var(--chain-r);
+  border-top: var(--chain-line) solid var(--chain-ink);
+  border-left: var(--chain-line) solid var(--chain-ink);
+  border-top-left-radius: var(--chain-r);
+}
+
+/* the corner that catches the vertical at the far right */
+.chain__return-span::after {
+  content: '';
+  position: absolute;
+  right: 1px;
+  /* The straight run is a border-top sitting just below the 50% line, so this
+     corner is placed by where its border-bottom lands, not by its own box. */
+  top: calc(50% + var(--chain-line) - var(--chain-r));
+  width: var(--chain-r);
+  height: var(--chain-r);
+  border-bottom: var(--chain-line) solid var(--chain-ink);
+  border-right: var(--chain-line) solid var(--chain-ink);
+  border-bottom-right-radius: var(--chain-r);
+}
+
+/* out of the last domino on a row, right and down to the corner */
 .chain__return-out {
   position: relative;
   flex: 1 0 20px;
@@ -919,15 +958,13 @@
   left: 5px;
   right: 1px;
   top: 50%;
-  height: calc(50% + var(--chain-gap) / 2);
+  height: calc(50% + var(--chain-gap) / 2 + var(--chain-line) - var(--chain-r));
   border-top: var(--chain-line) solid var(--chain-ink);
   border-right: var(--chain-line) solid var(--chain-ink);
-  border-bottom: var(--chain-line) solid var(--chain-ink);
-  border-top-right-radius: 9px;
-  border-bottom-right-radius: 9px;
+  border-top-right-radius: var(--chain-r);
 }
 
-/* down the far side and right into the first domino of the next row */
+/* down from the corner and right into the first domino of the next row */
 .chain__return-in {
   position: relative;
   flex: 0 0 20px;
@@ -940,13 +977,11 @@
   position: absolute;
   left: 1px;
   right: 5px;
+  top: calc(var(--chain-r) - var(--chain-gap) / 2);
   bottom: 50%;
-  top: calc(var(--chain-gap) / -2);
-  border-top: var(--chain-line) solid var(--chain-ink);
   border-bottom: var(--chain-line) solid var(--chain-ink);
   border-left: var(--chain-line) solid var(--chain-ink);
-  border-top-left-radius: 9px;
-  border-bottom-left-radius: 9px;
+  border-bottom-left-radius: var(--chain-r);
 }
 
 .chain--closed .chain__fit {
@@ -1213,6 +1248,8 @@
   .rail .panel:first-child {
     flex: 0 1 auto;
     max-width: 52%;
+    /* Room for three comfortable slots before it starts giving ground. */
+    min-width: min(52%, calc(var(--chip-w) * 6 + 90px));
   }
 
   .panel--grow {
@@ -1261,15 +1298,6 @@
     max-width: 50%;
   }
 
-  .slots {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .slot {
-    aspect-ratio: 1.04;
-  }
-
   .slot__label {
     font-size: 0.6rem;
   }
@@ -1306,15 +1334,6 @@
 
   .tray {
     min-height: 58px;
-  }
-
-  .slots {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 5px;
-  }
-
-  .slot {
-    aspect-ratio: 0.86;
   }
 
   .panel__body {
@@ -1418,15 +1437,6 @@
   .rail .panel--grow {
     flex: 1 1 auto;
     min-height: 0;
-  }
-
-  .slots {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 4px;
-  }
-
-  .slot {
-    aspect-ratio: 0.82;
   }
 
   .tray {

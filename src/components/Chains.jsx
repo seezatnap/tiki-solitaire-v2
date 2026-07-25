@@ -190,7 +190,11 @@ function Chain({
               ))}
               {rowIndex < rows.length - 1 && <span className="chain__return-out" aria-hidden="true" />}
             </div>
-            {rowIndex < rows.length - 1 && <span className="chain__return-span" aria-hidden="true" />}
+            {rowIndex < rows.length - 1 && (
+              <span className="chain__return-span" aria-hidden="true">
+                <i />
+              </span>
+            )}
           </Fragment>
         ))}
       </div>
