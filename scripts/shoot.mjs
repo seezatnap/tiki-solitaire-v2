@@ -85,6 +85,22 @@ for (const viewport of VIEWPORTS) {
     await page.evaluate(() => document.querySelector('.scrim')?.remove());
     await page.waitForTimeout(200);
     await page.screenshot({ path: `${OUT}/${name}-loop.png` });
+
+    // A thirteen-domino chain must wrap onto more rows rather than shrink.
+    const chain = await page.evaluate(() => ({
+      rows: document.querySelectorAll('.chain__row').length,
+      returns: document.querySelectorAll('.chain__return-span').length,
+      chip: document.querySelector('.chain .chip')?.getBoundingClientRect().width ?? 0,
+      overflows: [...document.querySelectorAll('.chain__row')].some(
+        (row) => row.scrollWidth > row.clientWidth + 1
+      )
+    }));
+    if (chain.rows < 2) problems.push(`[${name}] chain did not wrap (${chain.rows} row)`);
+    if (chain.returns !== chain.rows - 1) {
+      problems.push(`[${name}] ${chain.returns} return lines for ${chain.rows} rows`);
+    }
+    if (chain.chip < 16) problems.push(`[${name}] chain chips shrank to ${chain.chip}px`);
+    if (chain.overflows) problems.push(`[${name}] a chain row overflows its width`);
     await context.close();
   }
 }

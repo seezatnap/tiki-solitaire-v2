@@ -65,9 +65,20 @@ surfaces declare which axis belongs to the page (`touch-action: pan-y` on cards,
 a chain socket to arm it, then tap the domino you want there. Nothing in the game
 requires a mouse.
 
-**Chains fit themselves.** A chain measures its own natural width and scales down
-until it fits the panel, so a thirteen-domino loop stays readable end to end
-instead of running off the edge.
+**Chains wrap; they never shrink.** Dominos in a chain stay at a readable size
+whatever the screen. When a chain outgrows the width it packs onto more rows,
+and a return line carries the eye from the end of one row back to the start of
+the next:
+
+```
+      … (domino) ─┐
+    ┌─────────────┘
+    └─ (domino) …
+```
+
+The packing is measured against the room the whole list has rather than the
+chain's own width — a chain is as wide as its rows, so measuring itself would
+chase its own tail.
 
 **The layout never scrolls the page.** The app is one `100dvh` column; the table,
 the workyard and the chain reef each scroll internally. On short-and-wide

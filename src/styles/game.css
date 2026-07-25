@@ -664,7 +664,8 @@
 }
 
 .domino--compact {
-  --chip-w: clamp(15px, 1.5vw, 20px);
+  /* Never smaller than a tray chip — a chain has to stay readable. */
+  --chip-w: clamp(17px, 1.7vw, 21px);
   border-radius: 11px;
 }
 
@@ -774,7 +775,9 @@
 
 .chain {
   position: relative;
-  flex: 0 1 auto;
+  /* Sized by its own rows — never squeezed by what sits beside it, or the
+     packing would be measured against a width the rows then change. */
+  flex: 0 0 auto;
   max-width: 100%;
   padding: 9px 12px 12px;
   border-radius: 15px;
@@ -796,7 +799,7 @@
   animation: breathe 2.4s ease-in-out infinite;
 }
 
-.chain__head {
+.chain__head-row {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -855,23 +858,90 @@
   animation: breathe 2.2s ease-in-out infinite;
 }
 
+/* A chain never shrinks its dominos — it wraps, and a return line carries the
+   eye from the end of one row back to the start of the next:
+
+       … (domino) ─┐
+     ┌─────────────┘
+     └─ (domino) …                                                          */
+
 .chain__fit {
+  --chain-gap: 22px;
+  --chain-line: 1.5px;
+  --chain-ink: color-mix(in oklab, var(--gold) 52%, transparent);
   position: relative;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
+  overflow: hidden;
 }
 
-.chain__fit::-webkit-scrollbar {
-  display: none;
-}
-
-.chain__track {
-  display: inline-flex;
+.chain__row {
+  display: flex;
   align-items: center;
   gap: 5px;
-  transform-origin: left top;
-  padding-bottom: 2px;
+}
+
+.chain__row > .domino,
+.chain__row > .socket {
+  flex: none;
+}
+
+.chain__return-span {
+  position: relative;
+  display: block;
+  height: var(--chain-gap);
+}
+
+/* the long run back across the full width, halfway down the gap */
+.chain__return-span::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  top: 50%;
+  border-top: var(--chain-line) solid var(--chain-ink);
+}
+
+/* out of the last domino on a row, right and down into the run */
+.chain__return-out {
+  position: relative;
+  flex: 1 0 14px;
+  align-self: stretch;
+  margin-left: -5px;
+}
+
+.chain__return-out::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  right: 1px;
+  top: 50%;
+  height: calc(50% + var(--chain-gap) / 2);
+  border-top: var(--chain-line) solid var(--chain-ink);
+  border-right: var(--chain-line) solid var(--chain-ink);
+  border-top-right-radius: 9px;
+}
+
+/* down the far side and right into the first domino of the next row */
+.chain__return-in {
+  position: relative;
+  flex: 0 0 14px;
+  align-self: stretch;
+  margin-right: -5px;
+}
+
+.chain__return-in::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  right: 5px;
+  bottom: 50%;
+  top: calc(var(--chain-gap) / -2);
+  border-bottom: var(--chain-line) solid var(--chain-ink);
+  border-left: var(--chain-line) solid var(--chain-ink);
+  border-bottom-left-radius: 9px;
+}
+
+.chain--closed .chain__fit {
+  --chain-ink: color-mix(in oklab, var(--surf) 55%, transparent);
 }
 
 .chain__link {

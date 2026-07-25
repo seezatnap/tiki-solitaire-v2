@@ -81,7 +81,9 @@ Items marked ✅ are covered by an automated check; the check is named beside th
 
 ### Chains
 - ✅ Each chain reads between two sockets showing the value that end wants — `play.mjs`
-- ✅ A chain scales itself down to fit the panel, to a floor of 0.44 — `shoot.mjs`
+- ✅ Dominos in a chain never shrink below tray size — `shoot.mjs`
+- ✅ A chain too wide for the panel wraps onto more rows — `shoot.mjs`
+- ✅ Each wrap draws a return line from the end of one row to the start of the next — `shoot.mjs`
 - ✅ Closed loops take a teal cast and a "closed loop" badge — `shoot.mjs`
 - ✅ Chains offer to splice when their ends agree — `play.mjs`
 

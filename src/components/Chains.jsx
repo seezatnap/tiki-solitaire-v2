@@ -1,17 +1,90 @@
-import { Fragment } from 'react';
+import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import { cx } from './Card.jsx';
 import { DominoTile, pretty } from './Workyard.jsx';
-import { useFitScale } from '../lib/hooks.js';
+import { useElementSize } from '../lib/hooks.js';
 import { checkCircular, getChainEndValues } from '../game/rules.js';
 
 /**
  * A chain reads left to right between two sockets. The sockets show the value
  * each end is hungry for — click one to arm it, then pick a domino, or simply
  * drag a domino onto it.
+ *
+ * Dominos are never shrunk to make a chain fit: a long chain wraps onto more
+ * rows instead, and a return line carries the eye from the end of one row back
+ * to the start of the next.
  */
+
+const TAIL = 20; // room reserved on a row for the outgoing return line
+const HEAD = 20; // room reserved at the start of a continued row
+
+const buildUnits = (chain, ends) => [
+  { key: 'socket-start', kind: 'socket', pos: 'start', value: ends.start },
+  ...chain.map((domino) => ({ key: domino.id, kind: 'domino', domino })),
+  { key: 'socket-end', kind: 'socket', pos: 'end', value: ends.end }
+];
+
+/** Natural sizes of the pieces, read straight off the rendered chain. */
+const measure = (fit) => {
+  const dominos = [...fit.querySelectorAll('.domino')];
+  const sockets = [...fit.querySelectorAll('.socket')];
+  const link = fit.querySelector('.chain__link');
+  const row = fit.querySelector('.chain__row');
+  const gap = row ? Number.parseFloat(getComputedStyle(row).columnGap) || 5 : 5;
+  return {
+    domino: dominos.length ? Math.max(...dominos.map((el) => el.offsetWidth)) : 92,
+    socketStart: sockets[0]?.offsetWidth || 54,
+    socketEnd: sockets[sockets.length - 1]?.offsetWidth || 54,
+    link: link?.offsetWidth || 13,
+    gap
+  };
+};
+
+const separator = (previous, unit, sizes) =>
+  sizes.gap + (previous.kind === 'domino' && unit.kind === 'domino' ? sizes.link + sizes.gap : 0);
+
+const widthOf = (unit, sizes) =>
+  unit.kind === 'domino' ? sizes.domino : unit.pos === 'start' ? sizes.socketStart : sizes.socketEnd;
+
+/** Greedy packing: how many units belong on each row. */
+const packRows = (units, available, sizes) => {
+  let straight = 0;
+  units.forEach((unit, index) => {
+    straight += widthOf(unit, sizes);
+    if (index > 0) straight += separator(units[index - 1], unit, sizes);
+  });
+  if (straight <= available) return [units.length];
+
+  const rows = [];
+  let count = 0;
+  let used = 0;
+  units.forEach((unit, index) => {
+    const width = widthOf(unit, sizes);
+    if (count === 0) {
+      used = width;
+      count = 1;
+      return;
+    }
+    // Every row but the last spends room on its return line; every row but the
+    // first spends room on the line arriving into it.
+    const budget = available - TAIL - (rows.length > 0 ? HEAD : 0);
+    const gap = separator(units[index - 1], unit, sizes);
+    if (used + gap + width <= budget) {
+      used += gap + width;
+      count += 1;
+    } else {
+      rows.push(count);
+      count = 1;
+      used = width;
+    }
+  });
+  if (count) rows.push(count);
+  return rows;
+};
+
 function Chain({
   chain,
   index,
+  room,
   selected,
   joinable,
   denied,
@@ -20,9 +93,40 @@ function Chain({
   onActivate,
   onPointerDown
 }) {
-  const [outerRef, innerRef, fit] = useFitScale(0.44, [chain.length]);
+  const fitRef = useRef(null);
+  const [rowSizes, setRowSizes] = useState(null);
+  const signature = useRef('');
+
   const ends = getChainEndValues(chain);
   const circular = checkCircular(chain);
+  const units = buildUnits(chain, ends);
+
+  // Packing is measured against the room the whole list has, not against this
+  // chain's own width — a chain is as wide as its rows, so measuring itself
+  // would chase its own tail.
+  useLayoutEffect(() => {
+    const fit = fitRef.current;
+    if (!fit || !room) return;
+    const card = fit.closest('.chain');
+    const style = card ? getComputedStyle(card) : null;
+    const inset = style
+      ? Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight)
+      : 24;
+    const next = packRows(units, room - inset, measure(fit));
+    const stamp = next.join(',');
+    if (stamp !== signature.current) {
+      signature.current = stamp;
+      setRowSizes(next);
+    }
+  });
+
+  const rows = [];
+  let cursor = 0;
+  for (const count of rowSizes || [units.length]) {
+    rows.push(units.slice(cursor, cursor + count));
+    cursor += count;
+  }
+  if (cursor < units.length) rows.push(units.slice(cursor));
 
   return (
     <article
@@ -36,7 +140,7 @@ function Chain({
       data-drop-kind="chain"
       data-drop-index={index}
     >
-      <header className="chain__head">
+      <header className="chain__head-row">
         <button
           type="button"
           className="chain__grip"
@@ -57,29 +161,36 @@ function Chain({
         )}
       </header>
 
-      <div className="chain__fit" ref={outerRef} style={fit.height ? { height: fit.height } : undefined}>
-        <div className="chain__track" ref={innerRef} style={{ transform: `scale(${fit.scale})` }}>
-          <Socket
-            chainIndex={index}
-            pos="start"
-            value={ends.start}
-            tone={socketTone(index, 'start')}
-            onSocket={onSocket}
-          />
-          {chain.map((domino, position) => (
-            <Fragment key={domino.id}>
-              {position > 0 && <span className="chain__link" aria-hidden="true" />}
-              <DominoTile domino={domino} compact />
-            </Fragment>
-          ))}
-          <Socket
-            chainIndex={index}
-            pos="end"
-            value={ends.end}
-            tone={socketTone(index, 'end')}
-            onSocket={onSocket}
-          />
-        </div>
+      <div className="chain__fit" ref={fitRef}>
+        {rows.map((row, rowIndex) => (
+          <Fragment key={`row-${rowIndex}`}>
+            <div className="chain__row">
+              {rowIndex > 0 && <span className="chain__return-in" aria-hidden="true" />}
+              {row.map((unit, unitIndex) => (
+                <Fragment key={unit.key}>
+                  {unitIndex > 0 &&
+                    unit.kind === 'domino' &&
+                    row[unitIndex - 1].kind === 'domino' && (
+                      <span className="chain__link" aria-hidden="true" />
+                    )}
+                  {unit.kind === 'socket' ? (
+                    <Socket
+                      chainIndex={index}
+                      pos={unit.pos}
+                      value={unit.value}
+                      tone={socketTone(index, unit.pos)}
+                      onSocket={onSocket}
+                    />
+                  ) : (
+                    <DominoTile domino={unit.domino} compact />
+                  )}
+                </Fragment>
+              ))}
+              {rowIndex < rows.length - 1 && <span className="chain__return-out" aria-hidden="true" />}
+            </div>
+            {rowIndex < rows.length - 1 && <span className="chain__return-span" aria-hidden="true" />}
+          </Fragment>
+        ))}
       </div>
     </article>
   );
@@ -119,6 +230,8 @@ export function ChainList({
   onPointerDown,
   newChainReady
 }) {
+  const [chainsRef, chainsSize] = useElementSize();
+
   if (!chains.length) {
     return (
       <div className={cx('chain-empty', newChainReady && 'is-ready')} data-drop-kind="new-chain" data-drop-index={-1}>
@@ -132,12 +245,13 @@ export function ChainList({
   }
 
   return (
-    <div className="chains">
+    <div className="chains" ref={chainsRef}>
       {chains.map((chain, index) => (
         <Chain
           key={`chain-${index}`}
           chain={chain}
           index={index}
+          room={chainsSize.width}
           selected={selected === index}
           joinable={joinable.has(index)}
           denied={denied === `chain:${index}`}
