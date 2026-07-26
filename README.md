@@ -3,6 +3,8 @@
 A patience game built entirely out of **fourteen**. Pair cards to fourteen, forge
 pairs into dominos, chain the dominos, and try to close the circle.
 
+<img width="1309" height="690" alt="image" src="https://github.com/user-attachments/assets/e5ca098f-642b-485e-9a62-c7742902afbb" />
+
 This is a ground-up rebuild of the original game. **The rules are unchanged** —
 every predicate in `src/game/rules.js` is a faithful port. Everything you can see
 and touch is new.
