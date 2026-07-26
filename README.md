@@ -144,8 +144,10 @@ node scripts/art/optimise.mjs  # PNG sources → the WebP the app loads
 node scripts/art/icons.mjs     # every installed-app size, from one source
 ```
 
-They read `OPENAI_API_KEY` from `.env`. The PNG sources are ~3MB each and stay out
-of git; the WebP the app actually loads is ~45KB a card.
+They read `OPENAI_API_KEY` from `.env` — copy `.env.example` and fill it in. The
+game itself needs no key: the deck, the table and the icons are committed, so
+`npm run dev` and `npm test` work on a fresh clone. The PNG sources are ~3MB each
+and stay out of git; the WebP the app actually loads is ~45KB a card.
 
 Cards keep their drawn CSS face underneath the painted one, so a missing or slow
 image degrades to a perfectly playable card rather than a blank rectangle.
@@ -167,3 +169,10 @@ npm run check:layout # reports any element spilling past the viewport
 `scripts/win-fixture.mjs` builds a genuine perfect game — an Eulerian circuit over
 the seven pair values — which is how the win sheet and the closed-loop chain get
 verified.
+
+## Licence
+
+MIT — see [LICENSE](LICENSE).
+
+The card faces, table and icons in `public/art` and `public/icons` were generated
+with OpenAI's `gpt-image-2` and are covered by the same licence.
