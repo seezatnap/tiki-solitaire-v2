@@ -21,6 +21,7 @@ import {
   canConnectToChainStart,
   canFormDomino,
   canJoinChains,
+  canJoinChainsAt,
   canPair,
   canStack,
   checkCircular,
@@ -99,6 +100,7 @@ export default function App() {
         return closed && !wasClosed ? 'loop' : 'chain';
       }
       case 'JOIN_CHAINS':
+      case 'JOIN_CHAINS_AT':
         return after.chains.some(checkCircular) ? 'loop' : 'join';
       case 'NEW_GAME':
         return 'shuffle';
@@ -262,11 +264,31 @@ export default function App() {
 
   const activateSocket = useCallback(
     (chainIndex, pos) => {
+      const { chains } = stateRef.current;
+      // With a chain in hand, a socket says where to splice it on.
+      if (selectedChain !== null && selectedChain !== chainIndex) {
+        if (canJoinChainsAt(chains[selectedChain], chains[chainIndex], pos)) {
+          act(
+            {
+              type: 'JOIN_CHAINS_AT',
+              movingIndex: selectedChain,
+              targetIndex: chainIndex,
+              position: pos
+            },
+            `chain:${chainIndex}`
+          );
+          setSelectedChain(null);
+          return;
+        }
+        playSound('deny');
+        flashDenied(`chain:${chainIndex}`);
+        return;
+      }
       setSelectedChain(null);
       setArmed((prev) => (prev && prev.chainIndex === chainIndex && prev.pos === pos ? null : { chainIndex, pos }));
       playSound('lift');
     },
-    []
+    [act, flashDenied, selectedChain]
   );
 
   const activateChain = useCallback(
@@ -281,15 +303,8 @@ export default function App() {
         setSelectedChain(null);
         return;
       }
-      const { chains } = stateRef.current;
-      if (canJoinChains(chains[selectedChain], chains[index])) {
-        act({ type: 'JOIN_CHAINS', indexA: selectedChain, indexB: index }, `chain:${index}`);
-        setSelectedChain(null);
-        return;
-      }
-      playSound('deny');
-      flashDenied(`chain:${index}`);
       setSelectedChain(index);
+      playSound('lift');
     },
     [act, flashDenied, selectedChain]
   );
@@ -318,8 +333,15 @@ export default function App() {
           if (target.kind === 'domino') return target.index !== payload.position;
           return false;
         }
-        case 'chain':
-          return target.kind === 'chain' && target.index !== payload.index;
+        case 'chain': {
+          if (target.index === payload.index) return false;
+          // Dropping on a socket says which junction to use; dropping on the
+          // card itself only reorders. Which end to splice is the player's call.
+          if (target.kind === 'socket') {
+            return canJoinChainsAt(chains[payload.index], chains[target.index], target.pos);
+          }
+          return target.kind === 'chain';
+        }
         default:
           return false;
       }
@@ -376,8 +398,16 @@ export default function App() {
           return;
         }
         case 'chain': {
-          if (canJoinChains(chains[payload.index], chains[target.index])) {
-            act({ type: 'JOIN_CHAINS', indexA: payload.index, indexB: target.index }, `chain:${target.index}`);
+          if (target.kind === 'socket') {
+            act(
+              {
+                type: 'JOIN_CHAINS_AT',
+                movingIndex: payload.index,
+                targetIndex: target.index,
+                position: target.pos
+              },
+              `chain:${target.index}`
+            );
           } else {
             act({ type: 'REORDER_CHAINS', fromIndex: payload.index, toIndex: target.index });
           }
@@ -535,6 +565,12 @@ function Board({
     if (dragging?.kind === 'domino') {
       const domino = state.dominos[dragging.index];
       if (domino && connects(domino, state.chains[chainIndex], pos)) return 'ready';
+    }
+    // A chain in hand — by drag or by tap — lights the junctions it could take.
+    const carried =
+      dragging?.kind === 'chain' ? dragging.index : selectedChain !== null ? selectedChain : null;
+    if (carried !== null && carried !== chainIndex) {
+      if (canJoinChainsAt(state.chains[carried], state.chains[chainIndex], pos)) return 'ready';
     }
     return null;
   };

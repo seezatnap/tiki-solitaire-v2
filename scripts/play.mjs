@@ -254,14 +254,21 @@ await boardDrag(
 check('first chain grew', await board.locator('.chain').first().locator('.domino').count(), 2);
 check('tray is empty', await board.locator('.tray__grip').count(), 0);
 
-console.log('tap the two chains to splice them');
+console.log('pick a chain, then say which end of the other it joins');
 await board.locator('.chain').first().locator('.chain__grip').click();
-await board.waitForTimeout(160);
+await board.waitForTimeout(200);
 check('other chain offers to join', await board.locator('.chain.is-joinable').count(), 1);
-await board.locator('.chain').nth(1).locator('.chain__grip').click();
+check(
+  'only the junction that fits lights up',
+  await board.locator('.chain').nth(1).locator('.socket.is-ready').count(),
+  1
+);
+// Chain 1 ends at 2-Q and chain 2 starts at 2-Q, so the start socket is the one.
+await board.locator('.chain').nth(1).locator('.socket--start').click();
 await board.waitForTimeout(520);
 check('one chain remains', await board.locator('.chain').count(), 1);
 check('holding three dominos', await board.locator('.chain .domino').count(), 3);
+check('spliced at the end the player picked', await board.locator('.socket--start .socket__value').innerText(), 'A–K');
 
 console.log('drag one pair onto the other to forge');
 await boardDrag(

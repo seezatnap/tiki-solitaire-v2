@@ -18,6 +18,7 @@ import {
   createNewChainWithDomino,
   createPairFromTableau,
   joinChains,
+  joinChainsAt,
   loadState,
   moveCard,
   reducer,
@@ -243,6 +244,37 @@ describe('chains', () => {
     const joined = joinChains(state, 1, 0);
     expect(joined.chains).toHaveLength(1);
     expect(getChainEndValues(joined.chains[0])).toEqual({ start: '2-Q', end: 'A-K' });
+  });
+
+  it('splices onto the end the player picked, turning the chain if needed', () => {
+    let state = withDominos([pairAK, pair59], [pair2Q, [card('9', '♦'), card('5', '♣')]]);
+    state = createNewChainWithDomino(state, 0); // A-K … 5-9
+    state = createNewChainWithDomino(state, 1); // 2-Q … 5-9
+
+    // Onto chain 0's end (5-9): chain 1 has to turn around to present 5-9 first.
+    const onEnd = joinChainsAt(state, 1, 0, 'end');
+    expect(onEnd.chains).toHaveLength(1);
+    expect(getChainEndValues(onEnd.chains[0])).toEqual({ start: 'A-K', end: '2-Q' });
+
+    // Onto chain 0's start (A-K): nothing on chain 1 meets A-K, so it is refused
+    // rather than quietly spliced somewhere else.
+    expect(joinChainsAt(state, 1, 0, 'start')).toBe(state);
+  });
+
+  it('keeps the chain that was dropped onto where it was', () => {
+    let state = withDominos([pairAK, pair59], [pair2Q, [card('9', '♦'), card('5', '♣')]]);
+    state = createNewChainWithDomino(state, 0);
+    state = createNewChainWithDomino(state, 1);
+    const joined = joinChainsAt(state, 0, 1, 'end');
+    expect(joined.chains).toHaveLength(1);
+    // Chain 1 was the target, so its own reading order survives.
+    expect(getChainEndValues(joined.chains[0])).toEqual({ start: '2-Q', end: 'A-K' });
+  });
+
+  it('refuses to splice a chain onto itself', () => {
+    let state = withDominos([pairAK, pair59]);
+    state = createNewChainWithDomino(state, 0);
+    expect(joinChainsAt(state, 0, 0, 'end')).toBe(state);
   });
 
   it('refuses to join chains that do not meet', () => {

@@ -262,7 +262,9 @@ export function HelpModal({ open, onClose }) {
             <li>Drag a domino onto either socket of a chain to extend it, or tap the socket first and
               then tap the domino.</li>
             <li>Dominos join where their values match; they flip themselves to fit.</li>
-            <li>Tap two chains whose ends agree to splice them together.</li>
+            <li>To splice two chains, drag one onto the socket where you want it to
+              join — or tap it, then tap that socket. Which end meets which is your
+              choice, not the game's.</li>
             <li><strong>Chains are permanent.</strong> Nothing comes back out.</li>
           </ul>
         </section>

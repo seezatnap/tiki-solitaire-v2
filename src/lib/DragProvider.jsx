@@ -4,20 +4,30 @@ import { createPortal } from 'react-dom';
 /**
  * One drag system for mouse, pen and touch.
  *
- * Sources call `arm()` on pointerdown; the drag only wakes up once the pointer
- * has travelled far enough that it can't be a click. Targets are plain DOM
- * nodes tagged with `data-drop-kind` / `data-drop-index` / `data-drop-pos`, so
- * any component can become droppable without wiring handlers through props.
+ * Sources call `arm()` on pointerdown. What happens next depends on the device:
  *
- * Touch scrolling is left to the browser: draggable surfaces declare which axis
- * belongs to the page (`touch-action: pan-y` and friends) and the browser hands
- * us the other one.
+ *  - Mouse and pen wake the drag as soon as the pointer has travelled further
+ *    than a click would.
+ *  - Touch waits for a short hold. Moving before that hold is a scroll, and the
+ *    session is dropped so the page keeps it. Once the hold passes, the drag
+ *    takes the gesture over and blocks scrolling outright — which is what stops
+ *    a page scroll from tearing a drag away half-finished.
+ *
+ * While a drag is live the page auto-scrolls near the edges, so a domino can
+ * reach a chain that started off screen.
+ *
+ * Targets are plain DOM nodes tagged `data-drop-kind` / `data-drop-index` /
+ * `data-drop-pos`, so any component can become droppable without wiring
+ * handlers through props.
  */
 
 const DragContext = createContext(null);
 
-const THRESHOLD = 6;
+const MOUSE_SLOP = 6; // movement that means "this is a drag, not a click"
+const TOUCH_HOLD = 170; // ms of stillness before touch hands the gesture over
+const TOUCH_SLOP = 10; // movement inside that window means "I meant to scroll"
 const CLICK_GRACE = 240;
+const EDGE = 68; // how close to the edge auto-scroll begins
 
 const readTarget = (element) => ({
   kind: element.dataset.dropKind,
@@ -26,19 +36,19 @@ const readTarget = (element) => ({
 });
 
 export function DragProvider({ canDrop, onDrop, children }) {
-  const [drag, setDrag] = useState(null); // { payload, ghost, target } — only re-renders on target change
+  const [drag, setDrag] = useState(null); // { payload, ghost, target } — re-renders only on target change
   const session = useRef(null);
   const ghostRef = useRef(null);
   const point = useRef({ x: 0, y: 0 });
   const endedAt = useRef(0);
+  const scrolling = useRef(null);
 
   const rules = useRef({ canDrop, onDrop });
   rules.current = { canDrop, onDrop };
 
   const findTarget = useCallback((x, y, payload) => {
     if (typeof document === 'undefined' || !document.elementsFromPoint) return null;
-    const stack = document.elementsFromPoint(x, y);
-    for (const element of stack) {
+    for (const element of document.elementsFromPoint(x, y)) {
       if (!element.dataset?.dropKind) continue;
       const target = readTarget(element);
       if (rules.current.canDrop?.(payload, target)) return target;
@@ -55,33 +65,114 @@ export function DragProvider({ canDrop, onDrop, children }) {
     node.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${live.tilt}deg) scale(1.04)`;
   }, []);
 
+  const aim = useCallback(() => {
+    const live = session.current;
+    if (!live?.active) return;
+    const target = findTarget(point.current.x, point.current.y, live.payload);
+    const same =
+      (!target && !live.target) ||
+      (target &&
+        live.target &&
+        target.kind === live.target.kind &&
+        target.index === live.target.index &&
+        target.pos === live.target.pos);
+    if (!same) {
+      live.target = target;
+      setDrag((prev) => (prev ? { ...prev, target } : prev));
+    }
+  }, [findTarget]);
+
+  // Touch scrolling is the browser's until a drag actually starts; from then on
+  // it is ours, or the page slides out from under the card mid-drag.
+  const blockScroll = useCallback((event) => {
+    if (session.current?.active) event.preventDefault();
+  }, []);
+
+  const roll = useCallback(() => {
+    const live = session.current;
+    if (!live?.active) {
+      scrolling.current = null;
+      return;
+    }
+    const y = point.current.y;
+    const room = document.documentElement.scrollHeight - window.innerHeight;
+    if (room > 1) {
+      let step = 0;
+      if (y < EDGE) step = -Math.ceil((EDGE - y) / 3);
+      else if (y > window.innerHeight - EDGE) step = Math.ceil((y - (window.innerHeight - EDGE)) / 3);
+      if (step) {
+        const before = window.scrollY;
+        window.scrollBy(0, step);
+        if (window.scrollY !== before) aim(); // the board moved under a still finger
+      }
+    }
+    scrolling.current = requestAnimationFrame(roll);
+  }, [aim]);
+
+  const activate = useCallback(() => {
+    const live = session.current;
+    if (!live || live.active) return;
+    live.active = true;
+    window.clearTimeout(live.hold);
+    document.body.classList.add('is-dragging');
+    try {
+      live.source?.setPointerCapture?.(live.pointerId);
+    } catch {
+      /* capture is a nicety, not a requirement */
+    }
+    if (live.touch) navigator.vibrate?.(8);
+    window.addEventListener('touchmove', blockScroll, { passive: false });
+    scrolling.current = requestAnimationFrame(roll);
+    setDrag({ payload: live.payload, ghost: live.ghost, target: null });
+    paintGhost();
+  }, [blockScroll, paintGhost, roll]);
+
   const finish = useCallback(() => {
+    const live = session.current;
+    if (live) {
+      window.clearTimeout(live.hold);
+      try {
+        live.source?.releasePointerCapture?.(live.pointerId);
+      } catch {
+        /* already gone */
+      }
+    }
+    window.removeEventListener('touchmove', blockScroll);
+    if (scrolling.current) cancelAnimationFrame(scrolling.current);
+    scrolling.current = null;
     session.current = null;
     endedAt.current = Date.now();
     document.body.classList.remove('is-dragging');
     setDrag(null);
-  }, []);
+  }, [blockScroll]);
 
-  const arm = useCallback((event, payload, ghost, options = {}) => {
-    if (event.button !== undefined && event.button !== 0) return;
-    const source = event.currentTarget;
-    const rect = source.getBoundingClientRect();
-    point.current = { x: event.clientX, y: event.clientY };
-    session.current = {
-      pointerId: event.pointerId,
-      payload,
-      ghost,
-      startX: event.clientX,
-      startY: event.clientY,
-      grabX: event.clientX - rect.left,
-      grabY: event.clientY - rect.top,
-      width: rect.width,
-      height: rect.height,
-      tilt: options.tilt ?? -3,
-      active: false,
-      target: null
-    };
-  }, []);
+  const arm = useCallback(
+    (event, payload, ghost, options = {}) => {
+      if (event.button !== undefined && event.button !== 0) return;
+      const source = event.currentTarget;
+      const rect = source.getBoundingClientRect();
+      const touch = event.pointerType === 'touch';
+      point.current = { x: event.clientX, y: event.clientY };
+      session.current = {
+        pointerId: event.pointerId,
+        source,
+        touch,
+        payload,
+        ghost,
+        startX: event.clientX,
+        startY: event.clientY,
+        grabX: event.clientX - rect.left,
+        grabY: event.clientY - rect.top,
+        width: rect.width,
+        height: rect.height,
+        tilt: options.tilt ?? -3,
+        active: false,
+        target: null,
+        hold: touch ? window.setTimeout(activate, TOUCH_HOLD) : null
+      };
+    },
+    [activate]
+  );
 
   useEffect(() => {
     const move = (event) => {
@@ -91,25 +182,20 @@ export function DragProvider({ canDrop, onDrop, children }) {
 
       if (!live.active) {
         const travelled = Math.hypot(event.clientX - live.startX, event.clientY - live.startY);
-        if (travelled < THRESHOLD) return;
-        live.active = true;
-        document.body.classList.add('is-dragging');
-        setDrag({ payload: live.payload, ghost: live.ghost, target: null });
+        if (live.touch) {
+          // Moved before the hold elapsed: the player is scrolling, not dragging.
+          if (travelled > TOUCH_SLOP) {
+            window.clearTimeout(live.hold);
+            session.current = null;
+          }
+          return;
+        }
+        if (travelled < MOUSE_SLOP) return;
+        activate();
       }
 
       paintGhost();
-      const target = findTarget(event.clientX, event.clientY, live.payload);
-      const same =
-        (!target && !live.target) ||
-        (target &&
-          live.target &&
-          target.kind === live.target.kind &&
-          target.index === live.target.index &&
-          target.pos === live.target.pos);
-      if (!same) {
-        live.target = target;
-        setDrag((prev) => (prev ? { ...prev, target } : prev));
-      }
+      aim();
     };
 
     const up = (event) => {
@@ -120,13 +206,17 @@ export function DragProvider({ canDrop, onDrop, children }) {
         if (target) rules.current.onDrop?.(live.payload, target);
         finish();
       } else {
+        window.clearTimeout(live.hold);
         session.current = null;
       }
     };
 
     const cancel = () => {
       if (session.current?.active) finish();
-      else session.current = null;
+      else if (session.current) {
+        window.clearTimeout(session.current.hold);
+        session.current = null;
+      }
     };
 
     const key = (event) => {
@@ -143,7 +233,9 @@ export function DragProvider({ canDrop, onDrop, children }) {
       window.removeEventListener('pointercancel', cancel);
       window.removeEventListener('keydown', key);
     };
-  }, [findTarget, finish, paintGhost]);
+  }, [activate, aim, findTarget, finish, paintGhost]);
+
+  useEffect(() => () => finish(), [finish]);
 
   const isTarget = useCallback(
     (kind, index, pos = null) =>

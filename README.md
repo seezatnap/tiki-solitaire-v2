@@ -68,6 +68,17 @@ surfaces declare which axis belongs to the page (`touch-action: pan-y` on cards,
 a chain socket to arm it, then tap the domino you want there. Nothing in the game
 requires a mouse.
 
+**Touch waits before it takes over.** A drag on touch only wakes after a short
+hold; move before that and the gesture stays the page's, so scrolling feels
+normal. Once a drag does start it blocks scrolling outright — otherwise a page
+that slides under your finger tears the drag away mid-flight — and the page
+auto-scrolls near the edges so a domino can reach a chain that began off screen.
+
+**The player picks the junction.** Two chains can often meet at more than one
+end. Rather than choosing for them, a chain is dropped onto the *socket* it
+should join — by drag, or by tapping the chain and then the socket. The chain
+turns around if the junction needs it; the one dropped onto stays put.
+
 **Chains wrap; they never shrink.** Dominos in a chain stay at a readable size
 whatever the screen. When a chain outgrows the width it packs onto more rows,
 and a return line carries the eye from the end of one row back to the start of

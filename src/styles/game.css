@@ -330,7 +330,7 @@
 
 .card--top {
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: manipulation;
 }
 
 .card__head,
@@ -449,6 +449,8 @@
   width: clamp(272px, 25vw, 366px);
   flex: 0 0 auto;
   min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .panel {
@@ -464,6 +466,18 @@
 
 .panel--grow {
   flex: 1 1 auto;
+}
+
+/* The shelf is where dominos live between the pairs and the chains: it must
+   always show at least one row, whatever else is competing for the rail. */
+.panel--dominos {
+  min-height: calc(var(--chip-w) * 2.9 + 74px);
+}
+
+/* Pairs are a fixed six slots: they keep their natural height rather than
+   being squashed, and the rail scrolls if the two of them can't both fit. */
+.panel--pairs {
+  flex: 0 0 auto;
 }
 
 .panel__head {
@@ -567,7 +581,7 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  touch-action: none;
+  touch-action: manipulation;
   cursor: grab;
 }
 
@@ -669,7 +683,7 @@
 .tray__grip {
   display: block;
   border-radius: 14px;
-  touch-action: pan-x;
+  touch-action: manipulation;
   cursor: grab;
 }
 
@@ -835,7 +849,7 @@
   align-items: baseline;
   gap: 9px;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: manipulation;
   border-radius: 8px;
 }
 
@@ -1026,7 +1040,6 @@
   background: var(--gold);
   box-shadow: 0 0 7px color-mix(in oklab, var(--gold) 70%, transparent);
 }
-
 
 .socket {
   position: relative;
@@ -1258,9 +1271,11 @@
     min-height: 0;
   }
 
+  /* Side by side here, so it is width they need to be able to give up —
+     min-height: 0 would cancel the shelf's floor. */
   .rail .panel {
     flex: 1 1 0;
-    min-height: 0;
+    min-width: 0;
   }
 
   .rail .panel:first-child {
@@ -1289,55 +1304,6 @@
   }
 }
 
-/* Phone: the page flows. The table takes the height its columns need and
-   pushes everything below it down, rather than scrolling inside a frame. */
-@media (max-width: 700px) {
-  html,
-  body,
-  #root {
-    height: auto;
-    min-height: 100%;
-  }
-
-  body {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  .app {
-    height: auto;
-    min-height: 100dvh;
-  }
-
-  .stage,
-  .tableau,
-  .rail,
-  .reef {
-    flex: none;
-  }
-
-  .tableau {
-    min-height: 0;
-  }
-
-  .tableau__pane {
-    overflow: visible;
-  }
-
-  .reef,
-  .reef--quiet {
-    max-height: none;
-  }
-
-  .panel__body {
-    max-height: none;
-    overflow: visible;
-  }
-
-  .tray {
-    overflow-x: auto;
-  }
-}
 
 @media (max-width: 700px) {
   .btn span {
@@ -1412,17 +1378,16 @@
     padding: 8px 6px;
   }
 
-  .reef {
-    max-height: min(34vh, 300px);
-  }
 }
 
 @media (max-width: 460px) {
+  /* The name stays; the readouts give way instead. */
   .brand h1 {
-    display: none;
+    font-size: 0.95rem;
   }
 
-  .stats .stat:nth-child(1) {
+  .stats .stat:nth-child(1),
+  .stats .stat:nth-child(3) {
     display: none;
   }
 
@@ -1489,27 +1454,89 @@
     min-height: 0;
   }
 
+  /* Height is the scarce thing here, so the workyard spreads sideways: pairs
+     and shelf sit next to each other rather than stacking and pushing one of
+     them out of the frame. */
   .rail {
     flex: 0 0 auto;
-    flex-direction: column;
-    width: clamp(232px, 30vw, 310px);
+    flex-direction: row;
+    width: min(54%, 620px);
     gap: 7px;
+    overflow: visible;
   }
 
-  .rail .panel,
-  .rail .panel:first-child {
-    flex: 0 0 auto;
+  .rail .panel {
+    flex: 1 1 0;
+    min-width: 0;
     max-width: none;
   }
 
+  .rail .panel--pairs {
+    flex: 0 1 auto;
+    max-width: 56%;
+  }
+
   .rail .panel--grow {
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 1 1 0;
   }
 
   .tray {
     flex-wrap: nowrap;
     overflow-x: auto;
     min-height: 0;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   Phone: the page flows. The table takes the height its columns need and
+   pushes everything below it down, rather than scrolling inside a frame.
+   Kept last so nothing further down the cascade puts a ceiling back on.
+   --------------------------------------------------------------------- */
+
+@media (max-width: 700px) {
+  html,
+  body,
+  #root {
+    height: auto;
+    min-height: 100%;
+  }
+
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .app {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .stage,
+  .tableau,
+  .rail,
+  .reef {
+    flex: none;
+  }
+
+  .tableau {
+    min-height: 0;
+  }
+
+  .tableau__pane {
+    overflow: visible;
+  }
+
+  .reef,
+  .reef--quiet {
+    max-height: none;
+  }
+
+  .panel__body {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .tray {
+    overflow-x: auto;
   }
 }

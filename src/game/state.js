@@ -14,6 +14,7 @@ import {
   canConnectToChainStart,
   canFormDomino,
   canJoinChains,
+  canJoinChainsAt,
   canPair,
   canStack,
   createDeck,
@@ -192,6 +193,30 @@ export const addDominoToChainStart = (state, dominoIndex, chainIndex) => {
   return commitToChain(state, dominoIndex, chains);
 };
 
+/**
+ * Splices `moving` onto one named end of `target`. The moving chain turns
+ * around if that is what the junction needs; the target never moves, so the
+ * player sees the chain they dropped onto stay where it was.
+ */
+export const joinChainsAt = (state, movingIndex, targetIndex, position) => {
+  if (movingIndex === targetIndex) return state;
+  const moving = state.chains[movingIndex];
+  const target = state.chains[targetIndex];
+  if (!moving || !target || !canJoinChainsAt(moving, target, position)) return state;
+
+  const ends = getChainEndValues(moving);
+  const meeting = getChainEndValues(target);
+  const joined =
+    position === 'end'
+      ? [...target, ...(ends.start === meeting.end ? moving : reverseChain(moving))]
+      : [...(ends.end === meeting.start ? moving : reverseChain(moving)), ...target];
+
+  const chains = state.chains.map((chain, index) => (index === targetIndex ? joined : chain));
+  chains.splice(movingIndex, 1);
+
+  return { ...state, chains, moveCount: state.moveCount + 1 };
+};
+
 export const joinChains = (state, indexA, indexB) => {
   if (indexA === indexB) return state;
   const chainA = state.chains[indexA];
@@ -269,6 +294,8 @@ export const reducer = (state, action) => {
         : addDominoToChainEnd(state, action.dominoIndex, action.chainIndex);
     case 'JOIN_CHAINS':
       return joinChains(state, action.indexA, action.indexB);
+    case 'JOIN_CHAINS_AT':
+      return joinChainsAt(state, action.movingIndex, action.targetIndex, action.position);
     case 'REORDER_PAIRS':
       return reorderPairs(state, action.fromIndex, action.toIndex);
     case 'REORDER_DOMINOS':

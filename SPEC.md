@@ -34,7 +34,7 @@ Items marked ✅ are covered by an automated check; the check is named beside th
 - ✅ It may join at either end — `state.test.js`
 - ✅ Chains are permanent; nothing comes back out — `state.test.js`
 - ✅ Several chains may exist at once — `state.test.js`
-- ✅ Two chains splice when any two ends agree — `state.test.js`
+- ✅ Two chains splice at the junction the player picks, turning one if needed — `state.test.js`
 - ✅ A chain is circular when its ends carry the same value — `rules.test.js`
 
 ### Winning
@@ -85,20 +85,23 @@ Items marked ✅ are covered by an automated check; the check is named beside th
 - ✅ A chain too wide for the panel wraps onto more rows — `shoot.mjs`
 - ✅ Each wrap draws a return line from the end of one row to the start of the next — `shoot.mjs`
 - ✅ Closed loops take a teal cast and a "closed loop" badge — `shoot.mjs`
-- ✅ Chains offer to splice when their ends agree — `play.mjs`
+- ✅ With a chain in hand, only the junctions that fit light up — `play.mjs`
 
 ### Interaction
 - ✅ Tap a card, then a column, to move or pair — `play.mjs`, `App.test.jsx`
 - ✅ Tap two pairs to forge — `play.mjs`, `App.test.jsx`
 - ✅ Tap a domino to open a new chain — `play.mjs`, `App.test.jsx`
 - ✅ Tap a socket to arm it, then tap a domino to place it there — `play.mjs`, `App.test.jsx`
-- ✅ Tap two chains to splice them — `play.mjs`
+- ✅ Tap a chain, then tap the socket on another it should join — `play.mjs`
+- ✅ Or drag a chain onto that socket — `play.mjs`
 - ✅ Drag cards between columns — `play.mjs`
 - ✅ Drag a pair onto a pair to forge — `play.mjs`
 - ✅ Drag a domino onto a socket, or onto the reef to open a chain — `play.mjs`
 - ✅ A drag renders a tilted ghost and only starts past a click's distance — `play.mjs`
 - Drag also reorders pairs, dominos and chains
-- Mouse, pen and touch share one pointer-based implementation
+- Mouse, pen and touch share one pointer-based implementation. Touch waits for a
+  short hold, then takes the gesture over outright so a page scroll cannot tear a
+  drag away; the page auto-scrolls near the edges while dragging
 - Keyboard: `Esc` clears, `U` undoes, `?` opens the rules; cards are focusable
 
 ### Feedback
@@ -107,6 +110,11 @@ Items marked ✅ are covered by an automated check; the check is named beside th
 - Synthesised sounds per action, mutable, remembered
 - A progress line under the bar tracks dominos chained out of thirteen
 - Win: confetti of suit pips, "The circle closes", the run's numbers
+
+### Starting up
+- A splash — mask and title — is painted in the markup, so it shows before any
+  script runs, and hands over to the board once React has mounted
+- Installed copies use the same artwork for their icons and iOS startup screens
 
 ### Sheets
 - ✅ Rules sheet, four numbered sections — `shoot.mjs`, `App.test.jsx`

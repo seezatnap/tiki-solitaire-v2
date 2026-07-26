@@ -62,9 +62,64 @@
       html {
         background: #04100e;
       }
+
+      /* Painted in the markup so it is on screen before any script runs. */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        background:
+          radial-gradient(120% 90% at 50% 12%, #0f3a33 0%, transparent 62%),
+          linear-gradient(180deg, #051512 0%, #061c19 45%, #030d0c 100%);
+        transition: opacity 0.45s ease, visibility 0.45s;
+      }
+
+      #splash img {
+        width: clamp(104px, 26vmin, 168px);
+        height: auto;
+        border-radius: 26%;
+        animation: splash-rise 0.7s cubic-bezier(0.22, 0.9, 0.28, 1) both;
+      }
+
+      #splash p {
+        margin: 0;
+        font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+        font-size: clamp(1.1rem, 4.4vmin, 1.6rem);
+        letter-spacing: 0.02em;
+        color: #f3c977;
+        animation: splash-rise 0.7s cubic-bezier(0.22, 0.9, 0.28, 1) 0.08s both;
+      }
+
+      #splash.is-gone {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      @keyframes splash-rise {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.96);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #splash img,
+        #splash p {
+          animation: none;
+        }
+      }
     </style>
   </head>
   <body>
+    <div id="splash" aria-hidden="true">
+      <img src="/icons/icon-192.png" alt="" width="192" height="192" />
+      <p>Tiki Solitaire</p>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -193,6 +193,19 @@ export const getConnectableChains = (domino, chains = []) => {
   return spots;
 };
 
+/**
+ * Can `moving` be spliced onto the given end of `target`?
+ *
+ * The junction is the player's choice, not ours: a chain that could meet
+ * another at either end waits to be told which.
+ */
+export const canJoinChainsAt = (moving, target, position) => {
+  if (!moving?.length || !target?.length) return false;
+  const meeting = position === 'start' ? getChainEndValues(target).start : getChainEndValues(target).end;
+  const ends = getChainEndValues(moving);
+  return ends.start === meeting || ends.end === meeting;
+};
+
 export const canJoinChains = (chainA, chainB) => {
   if (!chainA?.length || !chainB?.length) return false;
   const a = getChainEndValues(chainA);
